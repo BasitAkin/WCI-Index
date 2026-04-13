@@ -1,0 +1,11 @@
+site,state,operator,W_ML_yr,W_MGD,W_ML_d,r,C_avg_ML_d,K_MGD,K_ML_d,PF,C_peak_ML_d,population,PUE,source,notes
+Lebanon,IN,Meta,,1.27,4.8074707,0.77,3.701752439,4.6,17.412886,6.3,23.3210403657,18000,—,Han et al. 2026; Project Domino 2025,Meta campus; r assumed at industry average; PF from permit application.
+Council Bluffs,IA,Google,5338.6,,14.6162902121834,0.716,10.4652637919233,30,113.5623,6.5,68.0242146475017,63000,1.09,Google Environmental Report 2025 (p. 110),"Two facilities (PUE 1.11/1.07). W=1,410.3 Mgal; C=1,010.2 Mgal. r=C/W."
+Mayes County,OK,Google,4195.4,,11.486379192334,0.752,8.63775715263518,10,37.8541,2.5,21.594392881588,41000,1.11,Google Environmental Report 2025 (p. 110),"W=1,108.3 Mgal; C=833.2 Mgal. PF=2.5 (warm-climate default)."
+The Dalles,OR,Google,1745.5,,4.77891854893908,0.784,3.74667214236824,4.5,17.034345,2.21,8.28014543463381,16000,1.08,Google Environmental Report 2025 (p. 110),Two facilities (PUE 1.10/1.06). W=461.1 Mgal; C=361.4 Mgal. PF from permit.
+Douglas County,GA,Google,1680.7,,4.60150581793292,0.826,3.80084380561259,8,30.28328,2.5,9.50210951403149,146000,1.09,Google Environmental Report 2025 (p. 110),W=444.1 Mgal (7.4 potable + 436.7 reclaimed); C=366.9 Mgal.
+Wisconsin Site,WI,Microsoft,,0.023,0.08706443,0.77,0.0670396111,2,7.57082,30,2.011188333,12000,—,Wisconsin Public Radio 2025; Han et al. 2026 §3.1.2,Mount Pleasant / Racine County. 8.4 M gal/yr; peak-day ratio >30x average from WPR records; r assumed; PF as adopted in Han 2026.
+Botetourt County,VA,Google,,2,7.57082,0.77,5.8295314,28,105.99148,2.5,14.5738285,34000,—,Google Botetourt County FAQ,Permitted 2 MGD; facility ramping; no PUE reported. r assumed.
+Memphis,TN,xAI,,1,3.78541,0.77,2.9147657,258,976.63578,4.5,13.11644565,630000,—,GEAA 2025,"xAI Colossus facility. Host utility is Memphis Light, Gas & Water (258 MGD). r and PF assumed."
+Midlothian,TX,Google,836.6,,2.29048596851472,0.825,1.88965092402464,36,136.27476,2.5,4.7241273100616,40000,—,Google Environmental Report 2025 (p. 110),W=221.0 Mgal; C=182.3 Mgal. City of Midlothian Water (36 MGD combined: Tayman 12 + Auger 24).
+Henderson,NV,Google,1362.7,,3.73086926762491,0.576,2.14898069815195,900,3406.869,2.5,5.37245174537988,320000,1.09,Google Environmental Report 2025 (p. 110),W=359.9 Mgal; C=207.4 Mgal. Low r reflects discharge reuse. Host is SNWA (900 MGD).

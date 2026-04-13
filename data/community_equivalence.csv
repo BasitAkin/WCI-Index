@@ -1,0 +1,11 @@
+site,C_avg_ML_d,C_annual_ML_yr,household_equivalent,population_served,per_capita_use_ML_d,community_total_ML_d,DC_community_pct,DC_equivalent_residents,interpretation
+Lebanon,3.701752,1352.065078,3261.1314,18000,0.000303,5.454,0.678722,12217.004749,Facility consumes water equivalent to 68% of the entire small-city community's residential demand.
+Council Bluffs,10.465264,3822.4376,9219.579354,63000,0.000303,19.089,0.548235,34538.824396,"Equal to 55% of the 63,000-person community's residential water use."
+Mayes County,8.637757,3154.9408,7609.601544,41000,0.000303,12.423,0.695304,28507.449349,"Equal to 70% of the 41,000-person rural community's residential water use."
+The Dalles,3.746672,1368.472,3300.704293,16000,0.000303,4.848,0.772828,12365.254595,"Equal to 77% of a 16,000-person town's residential water use."
+Douglas County,3.800844,1388.2582,3348.427882,146000,0.000303,44.238,0.085918,12544.038962,"Equal to 9% of the 146,000-person county's residential water use."
+Wisconsin Site,0.06704,24.486218,59.05986,12000,0.000303,3.636,0.018438,221.252842,Equal to 2% of the community's residential water use (tiny facility; dominant stress is peaking).
+Botetourt County,5.829531,2129.236344,5135.64,34000,0.000303,10.302,0.565864,19239.377558,"Equal to 57% of the 34,000-person county's residential water use."
+Memphis,2.914766,1064.618172,2567.82,630000,0.000303,190.89,0.015269,9619.688779,"Equal to 1.5% of the 630,000-person city's residential water use."
+Midlothian,1.889651,690.195,1664.725036,40000,0.000303,12.12,0.155912,6236.471696,"Equal to 15.6% of the 40,000-person city's residential water use."
+Henderson,2.148981,784.9152,1893.186686,320000,0.000303,96.96,0.022164,7092.345538,"Equal to 2.2% of the 320,000-person metro area's residential water use."
