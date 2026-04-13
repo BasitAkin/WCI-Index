@@ -5,7 +5,7 @@
 
 **Reproducible code, data, and companion workbook for the ten-site Water Consumption Impact (WCI) assessment.**
 
-> Akinade, B. A., Amanambu, A. C., & Frame, J. M. (2026). *AI Data Centers and the Water Use Feedback Loop.* Earth-Science Reviews (submitted).
+> Akinade, B. A., Amanambu, A. C., & Frame, J. M. (2026). *AI Data Centers and the Water Use Feedback Loop.*
 
 ---
 
