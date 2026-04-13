@@ -80,7 +80,7 @@ Water-Consumption-Impact_WCI_Index/
 |-- .gitignore                      Git ignore rules
 |
 |-- workbook/
-|   |-- WCI_10Site_Workbook_v6_6.xlsx   Companion Excel workbook with live formulas
+|   |-- WCI_10Site_Workbook.xlsx   Companion Excel workbook with live formulas
 |                                        (7 sheets, 1,080+ formulas, zero errors)
 |
 |-- data/
