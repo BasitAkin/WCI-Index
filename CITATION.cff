@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software or data, please cite the associated paper."
+title: "Water Consumption Impact (WCI) Index"
+type: software
+authors:
+  - given-names: Basit A.
+    family-names: Akinade
+    affiliation: "WINGS Laboratory, The University of Alabama"
+  - given-names: Amobichukwu C.
+    family-names: Amanambu
+    affiliation: "WINGS Laboratory, The University of Alabama"
+    orcid: "https://orcid.org/0000-0002-0000-0000"
+  - given-names: Jonathan M.
+    family-names: Frame
+    affiliation: "Department of Geological Sciences, The University of Alabama"
+version: "1.0.0"
+date-released: "2026-04-13"
+license: MIT
+repository-code: "https://github.com/<your-org>/WCI-Index"
+keywords:
+  - water consumption impact
+  - data centers
+  - water resources
+  - peak demand
+  - infrastructure capacity
+  - sustainability
+  - AI environmental footprint
+preferred-citation:
+  type: article
+  authors:
+    - given-names: Basit A.
+      family-names: Akinade
+    - given-names: Amobichukwu C.
+      family-names: Amanambu
+    - given-names: Jonathan M.
+      family-names: Frame
+  title: "AI Data Centers and the Water Use Feedback Loop"
+  journal: "Earth-Science Reviews"
+  year: 2026
+  status: submitted
