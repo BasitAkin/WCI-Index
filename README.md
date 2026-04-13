@@ -2,7 +2,7 @@
 
 **Reproducible code and data for the ten-site WCI assessment presented in:**
 
-> Akinade, B. A., Amanambu, A. C., & Frame, J. M. (2026). *AI Data Centers and the Water Use Feedback Loop.* Earth-Science Reviews (submitted).
+> Akinade, B. A., Amanambu, A. C., & Frame, J. M. (2026). *AI Data Centers and the Water Use Feedback Loop.* 
 
 ---
 
