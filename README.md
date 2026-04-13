@@ -114,7 +114,7 @@ Water-Consumption-Impact_WCI_Index/
 
 ## Companion Excel Workbook
 
-The file `workbook/WCI_10Site_Workbook_v6_6.xlsx` is the self-contained companion workbook submitted as supplementary material with the manuscript. It contains seven sheets:
+The file `WCI_10Site_Workbook.xlsx` is the self-contained companion workbook submitted as supplementary material with the manuscript. It contains seven sheets:
 
 | Sheet | Contents |
 |-------|----------|
