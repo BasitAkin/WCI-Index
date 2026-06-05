@@ -258,7 +258,7 @@ If you use this code, data, or workbook, please cite:
 
 ```bibtex
 @article{Akinade2026_WCI,
-  author  = {Akinade, Basit A. and Amanambu, Amobichukwu C. and Frame, Jonathan M.},
+  author  = {Akinade, Basit A. and Amanambu, Amobichukwu C. and Frame, Jonathan M. and Ren, S.},
   title   = {{AI} Data Centers and the Water Use Feedback Loop},
   journal = {Earth-Science Reviews},
   year    = {2026},
