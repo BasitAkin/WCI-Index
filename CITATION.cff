@@ -1,40 +1,23 @@
 cff-version: 1.2.0
-message: "If you use this software or data, please cite the associated paper."
-title: "Water Consumption Impact (WCI) Index"
+message: "If you use this repository, please cite the associated manuscript and this software release."
+title: "WCI and PDLR Reproducibility Package"
 type: software
+version: 1.0.0
+date-released: 2026-08-18
 authors:
-  - given-names: Basit A.
-    family-names: Akinade
-    affiliation: "WINGS Laboratory, The University of Alabama"
-  - given-names: Amobichukwu C.
-    family-names: Amanambu
-    affiliation: "WINGS Laboratory, The University of Alabama"
-    orcid: "https://orcid.org/0000-0002-0000-0000"
-  - given-names: Jonathan M.
-    family-names: Frame
-    affiliation: "Department of Geological Sciences, The University of Alabama"
-version: "1.0.0"
-date-released: "2026-04-13"
+  - family-names: Akinade
+    given-names: "Basit A."
+  - family-names: Amanambu
+    given-names: "Amobichukwu C."
+  - family-names: Frame
+    given-names: "Jonathan M."
+  - family-names: Ren
+    given-names: Shaolei
+repository-code: "https://github.com/BasitAkin/Water-Consumption-Impact_WCI_Index"
 license: MIT
-repository-code: "https://github.com/<your-org>/WCI-Index"
-keywords:
-  - water consumption impact
-  - data centers
-  - water resources
-  - peak demand
-  - infrastructure capacity
-  - sustainability
-  - AI environmental footprint
-preferred-citation:
-  type: article
-  authors:
-    - given-names: Basit A.
-      family-names: Akinade
-    - given-names: Amobichukwu C.
-      family-names: Amanambu
-    - given-names: Jonathan M.
-      family-names: Frame
-  title: "AI Data Centers and the Water Use Feedback Loop"
-  journal: "Earth-Science Reviews"
-  year: 2026
-  status: submitted
+abstract: >-
+  Reproducibility materials for the Water Consumption Impact (WCI) index
+  and companion Peak Delivery Load Ratio (PDLR), including audited inputs,
+  conditional ten-case results, one-at-a-time sensitivity checks, synthetic
+  boundary and failure-mode tests, validation checks, and figure generation.
+
