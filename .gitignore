@@ -1,6 +1,12 @@
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+venv/
+.idea/
+.vscode/
 .DS_Store
+Thumbs.db
 *.xlsx
-~$*
-.env
+*.xls
+tmp/
+
