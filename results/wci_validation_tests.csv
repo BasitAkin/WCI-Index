@@ -1,0 +1,14 @@
+test_id,test_description,test_status,observed
+no_fabricated_bounds,No empirical low or high bound is populated without verification,PASS,All low_value and high_value cells are blank
+ten_site_anchor_coverage,"The comparative anchor table retains exactly one row for each of the ten sites, including NA rows",PASS,anchor_rows=10; unique_sites=10
+fy2024_leap_year_conversion,All FY2024 annual Google quantities use 366 days,PASS,maximum absolute conversion error=4.440892098500626e-16
+wci_pdlr_identity,WCI equals r times PDLR under the stated shared-PF or constant-r assumption,PASS,maximum absolute residual=2.220446049250313e-16
+reported_wci_span,The seven conditional anchors reproduce the manuscript's 0.157--134 percent WCI span after rounding,PASS,minimum=0.157407407407 percent; maximum=133.913043478 percent
+botetourt_no_double_peak,Botetourt uses the 2 MGD peak reservation directly without another PF,PASS,W_peak=2.0 MGD; PF_W=None
+memphis_two_capacity_boundaries,Memphis uses the 1 MGD service maximum directly against whole-system and serving-plant denominators,PASS,memphis_peak_serving_plant_30;memphis_peak_system_258
+lebanon_boundary_scenarios,Lebanon includes the existing-system counterfactual and planned wholesale-allocation case without inferring a total,PASS,"K scenarios=[4.6, 25.0] MGD"
+required_na_cases,"Council Bluffs, current The Dalles, and combined Douglas comparative WCI/PDLR remain NA",PASS,council_bluffs_current_k_unresolved;douglas_combined_boundary_indeterminate;the_dalles_current_k_unresolved
+douglas_reclaimed_boundary,Douglas reclaimed-subsystem scenario has PDLR only and leaves WCI NA,PASS,WCI=None; PDLR=0.9943078324225866; K=3.0 MGD
+wisconsin_corrected_denominator,Wisconsin uses 40 MGD only as a conditional 2021-context system-capacity scenario,PASS,K=40.0 MGD; status=conditional_confirmation_pending
+analytic_sensitivity_execution,"The complete WCI and PDLR one-at-a-time sensitivity design contains 48 checks at 10, 25, and 50 percent",PASS,48 checks
+synthetic_test_execution,All synthetic boundary and false-data cases behaved as designed,PASS,23 cases
