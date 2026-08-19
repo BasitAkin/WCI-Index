@@ -97,8 +97,8 @@ Python standard library.
 Clone the repository and enter its root directory:
 
 ```bash
-git clone https://github.com/BasitAkin/Water-Consumption-Impact_WCI_Index.git
-cd Water-Consumption-Impact_WCI_Index
+git clone https://github.com/BasitAkin/Water-Consumption-Impact_WCI-and-Peak-Delivery-Load-Ratio_PDLR.git
+cd Water-Consumption-Impact_WCI-and-Peak-Delivery-Load-Ratio_PDLR
 ```
 
 Then run:
@@ -243,7 +243,7 @@ Suggested software citation:
 
 > Akinade, B. A., Amanambu, A. C., Frame, J. M., & Ren, S. (2026). *WCI and
 > PDLR Reproducibility Package* (Version 1.0.0) [Software]. GitHub.
-> https://github.com/BasitAkin/Water-Consumption-Impact_WCI_Index
+> https://github.com/BasitAkin/Water-Consumption-Impact_WCI-and-Peak-Delivery-Load-Ratio_PDLR
 
 Please also cite the associated article when its final bibliographic
 information is available.

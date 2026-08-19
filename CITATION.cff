@@ -13,11 +13,10 @@ authors:
     given-names: "Jonathan M."
   - family-names: Ren
     given-names: Shaolei
-repository-code: "https://github.com/BasitAkin/Water-Consumption-Impact_WCI_Index"
+repository-code: "https://github.com/BasitAkin/Water-Consumption-Impact_WCI-and-Peak-Delivery-Load-Ratio_PDLR"
 license: MIT
 abstract: >-
   Reproducibility materials for the Water Consumption Impact (WCI) index
   and companion Peak Delivery Load Ratio (PDLR), including audited inputs,
   conditional ten-case results, one-at-a-time sensitivity checks, synthetic
   boundary and failure-mode tests, validation checks, and figure generation.
-
