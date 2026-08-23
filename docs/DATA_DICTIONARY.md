@@ -6,8 +6,9 @@
 - `ML_d`: megalitres per day.
 - `WCI` and `PDLR`: dimensionless ratios.
 - `WCI_pct` and `PDLR_pct`: ratios multiplied by 100.
-- Blank numerical fields and `NA` interpretations mean unavailable or
-  inadmissible, not zero.
+- Blank numerical fields mean unavailable, ineligible, or not calculated; they
+  never mean zero. Supported numerator fields remain populated when only the
+  denominator gate fails.
 
 The conversion used throughout is `1 MGD = 3.785411784 ML/d`.
 
@@ -54,8 +55,9 @@ boundary status, calculation status, identity residual, and interpretation.
 
 ### `results/wci_pdlr_comparative_results.csv`
 
-The ten-row subset used for the principal comparison. Seven WCI values are
-conditional numerical anchors; three WCI comparisons remain NA.
+The ten-row principal audit. Seven WCI/PDLR values are conditional numerical
+anchors. Three records retain supported peak numerators while `K`, WCI, and
+PDLR remain blank because the matched-denominator gate is not satisfied.
 
 ### `results/wci_evidence_status.csv`
 
@@ -81,6 +83,5 @@ rank reversal, and invalid or missing inputs. These are not site observations.
 ### `results/wci_validation_tests.csv`
 
 Records automated PASS/FAIL checks for case coverage, leap-year conversion,
-WCI-PDLR identity, direct-peak handling, denominator scenarios, NA propagation,
+WCI-PDLR identity, direct-peak handling, denominator scenarios, numerator retention,
 the reported WCI span, sensitivity coverage, and synthetic-test execution.
-

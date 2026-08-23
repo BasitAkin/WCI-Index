@@ -65,10 +65,19 @@ denominators are not interchangeable.
 
 ## Case-study results represented in this repository
 
-The principal comparison contains ten US cases. Seven have explicitly
-conditional numerical WCI anchors, while three remain `NA` because a
-defensible matched denominator could not be resolved. The seven numerical WCI
-anchors span approximately `0.157%` to `134%` after rounding.
+The application audit contains ten US cases. Seven satisfy the matched-
+denominator gate and have explicitly conditional numerical WCI and PDLR
+anchors. For Council Bluffs, The Dalles, and Douglas County, supported demand
+numerators remain in the output tables, while `K`, WCI, and PDLR are left blank
+because a defensible matched denominator could not be resolved. The seven
+numerical WCI anchors span approximately `0.157%` to `134%` after rounding.
+
+The community-context calculation has a separate gate. Six cases have a
+defensible FY2024 average-consumption value; four planned or service-maximum
+records do not. Figures 3a, 3b, and 4b plot only cases eligible for the quantity
+shown. Figure 4a retains available factor evidence for all ten audited cases.
+The tabular files preserve the full ten-case audit and the reason for every
+unreported result.
 
 This span describes the retained conditional cases. It is not an empirical
 confidence interval, a definitive cross-site ranking, or evidence that one
@@ -110,8 +119,8 @@ python analysis/run_wci_pdlr_analysis.py
 A successful run writes the result tables to `results/` and reports that:
 
 - 14 audited scenarios were calculated;
-- the ten-case comparison retains seven conditional numerical WCI anchors and
-  three explicit NA values;
+- the ten-case comparison retains seven conditional numerical WCI/PDLR anchors
+  and supported peak numerators for the three denominator-ineligible cases;
 - 48 one-at-a-time sensitivity checks were completed;
 - 23 synthetic boundary and failure-mode cases passed; and
 - no unsupported empirical low or high bounds were generated;
@@ -132,8 +141,9 @@ This creates:
 - `figures/Figure_4ab_Decomposition.pdf`; and
 - `figures/Figure_S1_Sensitivity_FailureModes.pdf`.
 
-The plotting script checks the expected case counts, direct-peak calculation
-route, community-context coverage, PDF validity, and text-layout intersections.
+The plotting script checks the ten-case audit, seven ratio-eligible cases, six
+community-context-eligible cases, direct-peak calculation route, PDF validity,
+and text-layout intersections. It does not draw placeholder `NA` rows.
 
 ## Principal data and results
 
@@ -142,8 +152,9 @@ route, community-context coverage, PDF validity, and text-layout intersections.
   water pathway, capacity convention, and boundary decision.
 - `data/community_context_inputs.csv` contains the independently labelled
   jurisdictional comparison inputs used in the contextual figure panels.
-- `results/wci_pdlr_comparative_results.csv` contains the ten comparison
-  anchors, including all explicit NA results.
+- `results/wci_pdlr_comparative_results.csv` contains all ten comparison
+  records, including supported numerators and explicit calculation status for
+  denominator-ineligible cases.
 - `results/wci_pdlr_scenario_results.csv` contains the comparison anchors and
   documented alternative-boundary scenarios.
 - `results/wci_pdlr_analytic_sensitivity.csv` contains the 48 exact algebraic
@@ -166,7 +177,8 @@ Evidence codes are `M` (measured or directly reported site-specific actual),
 or permitted), and `U` (unresolved). A numerical result is calculated only when
 the declared numerator and denominator pass the analysis-unit, time, water-
 pathway, geographic, and capacity-convention checks. Missing or incompatible
-comparisons remain NA.
+ratio fields remain blank. Supported numerator quantities are retained rather
+than suppressed when only the denominator gate fails.
 
 No complete source-backed low/high input set was available for any of the ten
 comparison cases. The sensitivity and synthetic outputs are therefore
@@ -196,7 +208,8 @@ or forecasts.
 The committed analysis passes checks covering:
 
 - absence of fabricated empirical bounds;
-- ten-site anchor coverage and propagation of unresolved values as `NA`;
+- ten-site anchor coverage, retention of supported numerators, and suppression
+  of ratios when denominator eligibility fails;
 - leap-year conversion;
 - the stated WCI-PDLR identity;
 - direct-peak handling without double peaking;
@@ -218,7 +231,8 @@ Users extending the analysis to another site should:
 3. match numerator and denominator boundaries before calculation;
 4. distinguish nominal capacity, reliable supply, allocation, and available
    headroom;
-5. preserve missing or inadmissible results as `NA`;
+5. retain supported inputs while leaving missing or inadmissible derived fields
+   blank;
 6. avoid applying an additional peaking factor to a directly reported peak;
    and
 7. rerun all validation and sensitivity checks after modifying the inputs.

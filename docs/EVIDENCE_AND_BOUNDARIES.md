@@ -13,18 +13,19 @@ agreement in:
    available headroom, or regional capacity).
 
 An authoritative value is not automatically admissible. If its boundary does
-not match the numerator, the comparison remains NA or is retained only as a
-clearly labelled alternative scenario.
+not match the numerator, WCI and PDLR are not calculated or the comparison is
+retained only as a clearly labelled alternative scenario. Supported numerator
+quantities remain visible in the machine-readable results.
 
 ## Ten-case denominator decisions
 
 | Case | Retained capacity decision | Interpretation |
 |---|---|---|
 | Lebanon, Indiana | 4.6 MGD existing system; 25 MGD planned wholesale allocation kept separately | The 4.6 MGD comparison is a pre-expansion counterfactual; no total post-expansion capacity is inferred. |
-| Council Bluffs, Iowa | Current combined capacity unresolved | Plant-component ratings are not added to manufacture a system total; primary comparison is NA. |
+| Council Bluffs, Iowa | Current combined capacity unresolved | The accessible plant-component record does not verify the legacy 30 MGD sum as the current combined applicable capacity; WCI and PDLR are not calculated. |
 | Mayes County, Oklahoma | 50 MGD park-owned potable-system nominal capacity | Distinct from the reported 32 MGD available headroom. |
-| The Dalles, Oregon | Current capacity unresolved; 4.5 MGD retained only as a historical alternative | The 4.5 MGD value is documented for 2006 and is not represented as current. |
-| Douglas County, Georgia | Combined denominator unresolved; 3 MGD reclaimed subsystem retained separately | The reclaimed and potable pathways are not combined without source-specific evidence. |
+| The Dalles, Oregon | Current capacity unresolved; 4.5 MGD retained only as a historical alternative | The 4.5 MGD value is documented for 2006 and is not represented as current after a newer plan. |
+| Douglas County, Georgia | Combined denominator unresolved; 3 MGD reclaimed subsystem retained separately | The campus numerator combines potable and reclaimed water, so the reclaimed-only capacity is not used as a combined denominator. |
 | Mount Pleasant, Wisconsin | 40 MGD Racine system filtration capacity, conditionally retained | Current confirmation and final parcel/service-boundary matching remain pending. |
 | Botetourt County, Virginia | 24 MGD serving-plant nominal capacity | The 2 MGD project quantity is a reported maximum and is not peaked again. |
 | Memphis, Tennessee | 30 MGD serving-plant anchor; 258 MGD whole-system alternative | The 2 MGD local headroom is not treated as nominal treatment capacity. |
@@ -34,7 +35,8 @@ clearly labelled alternative scenario.
 ## Interpretation limits
 
 The ten comparison rows do not share one evidence class or one denominator
-type. Seven produce conditional numerical anchors and three remain unresolved.
+type. Seven produce conditional numerical anchors; three retain supported
+numerators but do not produce WCI or PDLR because the denominator gate fails.
 No case has a complete verified set of low and high inputs. Consequently:
 
 - no empirical confidence interval is reported;
@@ -49,3 +51,12 @@ and boundary notes are retained in `data/wci_input_provenance.csv`. External
 source documents are cited in the manuscript and Supplementary Information and
 are not redistributed in this repository.
 
+## Community-context eligibility
+
+The household-equivalent and residential-use-equivalent calculations require
+reported or defensibly reconstructed annual-average consumption. Six FY2024
+operating Google campuses pass this gate. Lebanon reports a planned 2031
+full-buildout peak; Mount Pleasant reports a planned annual envelope and peak;
+Botetourt County reports a maximum reservation with actual use described as
+seasonal and lower; and Memphis reports an "up to" service maximum. Those four
+records are not converted into average consumption by assumption.

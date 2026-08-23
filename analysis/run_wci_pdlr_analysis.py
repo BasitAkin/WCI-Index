@@ -265,13 +265,10 @@ def calculate_scenario(rows: list[dict[str, str]]) -> dict[str, Any]:
         "identity_residual": None,
         "interpretation_note": calculation_note(meta["scenario_id"]),
     }
-    if not allowed:
-        return result
-
-    k = parameters.get("K")
-    validate_value("K", k)
-    assert k is not None
-
+    # Derive every supported numerator quantity before applying the denominator
+    # eligibility gate. This preserves transparent demand information for cases
+    # whose current, pathway-matched K is unresolved, while preventing an
+    # unsupported WCI or PDLR from being calculated.
     if parameters.get("W_peak") is not None:
         w_peak = parameters["W_peak"]
         r_used = parameters.get("r_peak")
@@ -316,8 +313,15 @@ def calculate_scenario(rows: list[dict[str, str]]) -> dict[str, Any]:
             else "PF_W equals PF_C and r is constant from average to peak"
         )
 
-    wci = None if c_peak is None else c_peak / k
-    pdlr = w_peak / k
+    k = parameters.get("K")
+    if allowed:
+        validate_value("K", k)
+        assert k is not None
+    else:
+        k = None
+
+    wci = None if not allowed or c_peak is None else c_peak / k
+    pdlr = None if not allowed else w_peak / k
     identity_residual = None if wci is None or r_used is None else wci - r_used * pdlr
     if identity_residual is not None and abs(identity_residual) > NUMERIC_TOLERANCE:
         raise ValueError(f"Scenario {meta['scenario_id']}: WCI = r x PDLR identity failed")
@@ -325,7 +329,9 @@ def calculate_scenario(rows: list[dict[str, str]]) -> dict[str, Any]:
     result.update(
         {
             "calculation_status": (
-                "pdlr_only_source_specific_r_unavailable"
+                "numerator_only_denominator_or_boundary_unresolved"
+                if not allowed
+                else "pdlr_only_source_specific_r_unavailable"
                 if wci is None
                 else "numeric_conditional_scenario"
             ),
@@ -341,11 +347,11 @@ def calculate_scenario(rows: list[dict[str, str]]) -> dict[str, Any]:
             "C_avg_ML_d": None if c_avg is None else c_avg * MGD_TO_ML_D,
             "W_peak_ML_d": w_peak * MGD_TO_ML_D,
             "C_peak_ML_d": None if c_peak is None else c_peak * MGD_TO_ML_D,
-            "K_ML_d": k * MGD_TO_ML_D,
+            "K_ML_d": None if k is None else k * MGD_TO_ML_D,
             "WCI": wci,
             "WCI_pct": None if wci is None else wci * 100,
             "PDLR": pdlr,
-            "PDLR_pct": pdlr * 100,
+            "PDLR_pct": None if pdlr is None else pdlr * 100,
             "shared_pf_or_constant_r_assumption": assumption,
             "identity_residual": identity_residual,
         }
@@ -805,11 +811,18 @@ def build_validation_tests(
         "the_dalles_current_k_unresolved",
         "douglas_combined_boundary_indeterminate",
     }
-    na_ok = all(results_by_id[item]["WCI"] is None and results_by_id[item]["PDLR"] is None for item in na_ids)
+    numerator_only_ok = all(
+        results_by_id[item]["K_MGD"] is None
+        and results_by_id[item]["WCI"] is None
+        and results_by_id[item]["PDLR"] is None
+        and results_by_id[item]["W_peak_MGD"] is not None
+        and results_by_id[item]["C_peak_MGD"] is not None
+        for item in na_ids
+    )
     record(
-        "required_na_cases",
-        "Council Bluffs, current The Dalles, and combined Douglas comparative WCI/PDLR remain NA",
-        na_ok,
+        "denominator_ineligible_cases",
+        "Council Bluffs, current The Dalles, and combined Douglas retain supported numerators while K, WCI, and PDLR remain unreported",
+        numerator_only_ok,
         ";".join(sorted(na_ids)),
     )
     douglas = results_by_id["douglas_reclaimed_subsystem_pdlr"]
@@ -930,7 +943,10 @@ def main() -> int:
         f"PASS: generated {len(results)} corrected scenarios, "
         f"{len(analytic_sensitivity)} analytic checks, and {len(synthetic_rows)} synthetic tests."
     )
-    print("PASS: Council Bluffs, current The Dalles, and combined Douglas remain NA in comparative outputs.")
+    print(
+        "PASS: Council Bluffs, current The Dalles, and combined Douglas retain "
+        "conditional numerators while K, WCI, and PDLR remain unreported."
+    )
     print("PASS: no empirical low/high bounds were generated.")
     return 0
 

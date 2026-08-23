@@ -2,6 +2,7 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+.codex_deps/
 .idea/
 .vscode/
 .DS_Store
@@ -9,4 +10,3 @@ Thumbs.db
 *.xlsx
 *.xls
 tmp/
-
