@@ -184,14 +184,14 @@ def calculation_note(scenario_id: str) -> str:
             "Within-site planning scenario using the 25 MGD future wholesale allocation; no total "
             "post-expansion capacity is inferred."
         ),
-        "council_bluffs_current_k_unresolved": (
-            "NA: an explicit current combined nominal or firm capacity was not verified for Council Bluffs."
+        "council_bluffs_fy2024_combined_nominal_k": (
+            "Conditional reconstructed-capacity scenario: 30 MGD is the sum of the 20 MGD Narrows and 10 MGD Council Point nominal potable-treatment capacities; it is not firm available headroom."
         ),
         "mayes_fy2024_nominal_k_default_pf": (
             "Conditional nominal-capacity scenario; K is now authoritative, but PF remains an author assumption."
         ),
-        "the_dalles_current_k_unresolved": (
-            "NA for a current comparison: the adopted 2024 plan's current capacity total was not retrieved."
+        "the_dalles_fy2024_reliable_supply_k": (
+            "Conditional current-supply scenario using the City-reported 8.7 MGD reliable peak-season system supply; this is not available headroom."
         ),
         "the_dalles_fy2024_historical_k_proxy": (
             "Historical-denominator scenario only: FY2024 use is compared with the 4.5 MGD reliable supply reported in 2006."
@@ -199,8 +199,8 @@ def calculation_note(scenario_id: str) -> str:
         "douglas_combined_boundary_indeterminate": (
             "NA: combined reclaimed and potable water is not matched to one combined capacity denominator."
         ),
-        "douglas_reclaimed_subsystem_pdlr": (
-            "Reclaimed-subsystem PDLR scenario only; WCI is NA because reclaimed-stream consumption or r is unavailable."
+        "douglas_reclaimed_subsystem_wci_pdlr": (
+            "Conditional reclaimed-pathway scenario: the 3.0 MGD reclaimed side-stream capacity is matched to reclaimed withdrawal, and the FY2024 campus-wide consumptive ratio is used explicitly as a within-campus proxy for the reclaimed stream."
         ),
         "wisconsin_40_mgd_2021_context": (
             "Conditional 40 MGD Racine-system scenario; the official capacity source has 2021 context and current confirmation is pending."
@@ -691,8 +691,9 @@ def build_rank_admissibility(results: list[dict[str, Any]]) -> list[dict[str, An
     pdlr_ranks = average_descending_ranks(pdlr_values)
     na_names = sorted(row["site_name"] for row in anchors if row["WCI"] is None)
     scope = (
-        f"{len(wci_values)} numeric conditional anchors; WCI NA for {', '.join(na_names)}; "
-        "heterogeneous evidence and boundaries"
+        f"{len(wci_values)} numeric conditional anchors; "
+        + (f"WCI NA for {', '.join(na_names)}; " if na_names else "no primary WCI/PDLR anchors are NA; ")
+        + "heterogeneous evidence and boundaries"
     )
     output = []
     for row in anchors:
@@ -748,7 +749,7 @@ def build_validation_tests(
     anchor_sites = [row["site_id"] for row in anchors.values()]
     record(
         "ten_site_anchor_coverage",
-        "The comparative anchor table retains exactly one row for each of the ten sites, including NA rows",
+        "The comparative anchor table retains exactly one numerical WCI/PDLR row for each of the ten sites",
         len(anchors) == 10 and len(set(anchor_sites)) == 10,
         f"anchor_rows={len(anchors)}; unique_sites={len(set(anchor_sites))}",
     )
@@ -778,7 +779,7 @@ def build_validation_tests(
     wci_max = max(row["WCI_pct"] for row in numeric_anchors)
     record(
         "reported_wci_span",
-        "The seven conditional anchors reproduce the manuscript's 0.157--134 percent WCI span after rounding",
+        "The ten conditional anchors reproduce the manuscript's 0.157--134 percent WCI span after rounding",
         round(wci_min, 3) == 0.157 and round(wci_max) == 134,
         f"minimum={wci_min:.12g} percent; maximum={wci_max:.12g} percent",
     )
@@ -806,31 +807,43 @@ def build_validation_tests(
         lebanon_k == {4.6, 25.0},
         f"K scenarios={sorted(lebanon_k)} MGD",
     )
-    na_ids = {
-        "council_bluffs_current_k_unresolved",
-        "the_dalles_current_k_unresolved",
-        "douglas_combined_boundary_indeterminate",
+    new_anchor_ids = {
+        "council_bluffs_fy2024_combined_nominal_k",
+        "the_dalles_fy2024_reliable_supply_k",
+        "douglas_reclaimed_subsystem_wci_pdlr",
     }
-    numerator_only_ok = all(
-        results_by_id[item]["K_MGD"] is None
-        and results_by_id[item]["WCI"] is None
-        and results_by_id[item]["PDLR"] is None
-        and results_by_id[item]["W_peak_MGD"] is not None
-        and results_by_id[item]["C_peak_MGD"] is not None
-        for item in na_ids
-    )
     record(
-        "denominator_ineligible_cases",
-        "Council Bluffs, current The Dalles, and combined Douglas retain supported numerators while K, WCI, and PDLR remain unreported",
-        numerator_only_ok,
-        ";".join(sorted(na_ids)),
+        "resolved_three_primary_denominators",
+        "Council Bluffs, The Dalles, and Douglas County now have explicitly declared, boundary-qualified primary denominators",
+        new_anchor_ids.issubset(anchors)
+        and all(results_by_id[item]["K_MGD"] is not None
+                and results_by_id[item]["WCI"] is not None
+                and results_by_id[item]["PDLR"] is not None
+                for item in new_anchor_ids),
+        ";".join(sorted(new_anchor_ids)),
     )
-    douglas = results_by_id["douglas_reclaimed_subsystem_pdlr"]
+    council = results_by_id["council_bluffs_fy2024_combined_nominal_k"]
+    record(
+        "council_bluffs_reconstructed_k",
+        "Council Bluffs uses a reconstructed 30 MGD combined nominal potable-treatment capacity",
+        council["K_MGD"] == 30 and math.isclose(council["WCI_pct"], 59.8024, rel_tol=0, abs_tol=0.001),
+        f"K={council['K_MGD']} MGD; WCI={council['WCI_pct']}%; PDLR={council['PDLR_pct']}%",
+    )
+    dalles = results_by_id["the_dalles_fy2024_reliable_supply_k"]
+    record(
+        "the_dalles_current_reliable_k",
+        "The Dalles uses the current 8.7 MGD reliable peak-season system supply",
+        dalles["K_MGD"] == 8.7 and math.isclose(dalles["WCI_pct"], 25.082, rel_tol=0, abs_tol=0.01),
+        f"K={dalles['K_MGD']} MGD; WCI={dalles['WCI_pct']}%; PDLR={dalles['PDLR_pct']}%",
+    )
+    douglas = results_by_id["douglas_reclaimed_subsystem_wci_pdlr"]
     record(
         "douglas_reclaimed_boundary",
-        "Douglas reclaimed-subsystem scenario has PDLR only and leaves WCI NA",
-        douglas["WCI"] is None and douglas["PDLR"] is not None and douglas["K_MGD"] == 3,
-        f"WCI={douglas['WCI']}; PDLR={douglas['PDLR']}; K={douglas['K_MGD']} MGD",
+        "Douglas uses the 3 MGD reclaimed subsystem with a within-campus FY2024 consumptive-ratio proxy",
+        douglas["K_MGD"] == 3
+        and math.isclose(douglas["WCI_pct"], 82.1462606881, rel_tol=0, abs_tol=1e-8)
+        and math.isclose(douglas["PDLR_pct"], 99.4307832423, rel_tol=0, abs_tol=1e-8),
+        f"WCI={douglas['WCI_pct']}%; PDLR={douglas['PDLR_pct']}%; K={douglas['K_MGD']} MGD",
     )
     wisconsin = results_by_id["wisconsin_40_mgd_2021_context"]
     record(
@@ -944,8 +957,8 @@ def main() -> int:
         f"{len(analytic_sensitivity)} analytic checks, and {len(synthetic_rows)} synthetic tests."
     )
     print(
-        "PASS: Council Bluffs, current The Dalles, and combined Douglas retain "
-        "conditional numerators while K, WCI, and PDLR remain unreported."
+        "PASS: all ten comparison anchors have numerical conditional WCI and PDLR values, "
+        "including the reconstructed Council Bluffs, current-reliable The Dalles, and reclaimed-pathway Douglas cases."
     )
     print("PASS: no empirical low/high bounds were generated.")
     return 0

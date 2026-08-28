@@ -55,9 +55,7 @@ boundary status, calculation status, identity residual, and interpretation.
 
 ### `results/wci_pdlr_comparative_results.csv`
 
-The ten-row principal audit. Seven WCI/PDLR values are conditional numerical
-anchors. Three records retain supported peak numerators while `K`, WCI, and
-PDLR remain blank because the matched-denominator gate is not satisfied.
+The ten-row principal audit. All ten primary comparison rows contain conditional numerical WCI/PDLR anchors under explicitly declared boundaries. Unresolved or intentionally mismatched alternative scenarios remain available in the broader scenario table and retain blank derived fields where appropriate.
 
 ### `results/wci_evidence_status.csv`
 

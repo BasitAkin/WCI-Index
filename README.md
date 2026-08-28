@@ -65,17 +65,11 @@ denominators are not interchangeable.
 
 ## Case-study results represented in this repository
 
-The application audit contains ten US cases. Seven satisfy the matched-
-denominator gate and have explicitly conditional numerical WCI and PDLR
-anchors. For Council Bluffs, The Dalles, and Douglas County, supported demand
-numerators remain in the output tables, while `K`, WCI, and PDLR are left blank
-because a defensible matched denominator could not be resolved. The seven
-numerical WCI anchors span approximately `0.157%` to `134%` after rounding.
+The application audit contains ten US cases. All ten primary comparison anchors now have explicitly conditional numerical WCI and PDLR values under declared boundaries. Council Bluffs uses a reconstructed 30 MGD combined nominal potable-treatment capacity; The Dalles uses 8.7 MGD of current reliable peak-season supply; and Douglas County is evaluated on the matched reclaimed-water pathway using the reported 3.0 MGD subsystem capacity and a within-campus consumptive-ratio proxy. The ten numerical WCI anchors span approximately `0.157%` to `134%` after rounding.
 
 The community-context calculation has a separate gate. Six cases have a
 defensible FY2024 average-consumption value; four planned or service-maximum
-records do not. Figures 3a, 3b, and 4b plot only cases eligible for the quantity
-shown. Figure 4a retains available factor evidence for all ten audited cases.
+records do not. Figure 3a and Figure 4a include all ten primary WCI/PDLR cases. Figures 3b and 4b retain only the six cases eligible for the independent community-context calculation.
 The tabular files preserve the full ten-case audit and the reason for every
 unreported result.
 
@@ -96,7 +90,7 @@ figures/   Generated vector figures used in the manuscript and supplement
 ```
 
 The repository intentionally excludes internal working notes, superseded
-implementations, external source documents, and duplicate figure formats.
+implementations, external source documents, and superseded figure exports.
 
 ## Reproduce the numerical analysis
 
@@ -119,12 +113,11 @@ python analysis/run_wci_pdlr_analysis.py
 A successful run writes the result tables to `results/` and reports that:
 
 - 14 audited scenarios were calculated;
-- the ten-case comparison retains seven conditional numerical WCI/PDLR anchors
-  and supported peak numerators for the three denominator-ineligible cases;
+- the ten-case comparison retains ten conditional numerical WCI/PDLR anchors;
 - 48 one-at-a-time sensitivity checks were completed;
 - 23 synthetic boundary and failure-mode cases passed; and
 - no unsupported empirical low or high bounds were generated;
-- all 13 automated validation checks passed.
+- all 15 automated validation checks passed.
 
 ## Reproduce the figures
 
@@ -137,13 +130,11 @@ python analysis/build_figures.py
 
 This creates:
 
-- `figures/Figure_3ab_WCI.pdf`;
-- `figures/Figure_4ab_Decomposition.pdf`; and
-- `figures/Figure_S1_Sensitivity_FailureModes.pdf`.
+- `figures/Figure_3ab_WCI.pdf` and its 600-dpi JPG export;
+- `figures/Figure_4ab_Decomposition.pdf` and its 600-dpi JPG export; and
+- `figures/Figure_S1_Sensitivity_FailureModes.pdf` and its 600-dpi JPG export.
 
-The plotting script checks the ten-case audit, seven ratio-eligible cases, six
-community-context-eligible cases, direct-peak calculation route, PDF validity,
-and text-layout intersections. It does not draw placeholder `NA` rows.
+The plotting script checks the ten numerical primary WCI/PDLR anchors, six community-context-eligible cases, direct-peak calculation routes, PDF/JPG validity, and text-layout intersections.
 
 ## Principal data and results
 
@@ -152,9 +143,7 @@ and text-layout intersections. It does not draw placeholder `NA` rows.
   water pathway, capacity convention, and boundary decision.
 - `data/community_context_inputs.csv` contains the independently labelled
   jurisdictional comparison inputs used in the contextual figure panels.
-- `results/wci_pdlr_comparative_results.csv` contains all ten comparison
-  records, including supported numerators and explicit calculation status for
-  denominator-ineligible cases.
+- `results/wci_pdlr_comparative_results.csv` contains all ten primary comparison records, including conditional numerical WCI/PDLR values and their calculation status.
 - `results/wci_pdlr_scenario_results.csv` contains the comparison anchors and
   documented alternative-boundary scenarios.
 - `results/wci_pdlr_analytic_sensitivity.csv` contains the 48 exact algebraic
@@ -172,7 +161,7 @@ reusing or comparing the scenarios.
 
 ## Evidence policy
 
-Evidence codes are `M` (measured or directly reported site-specific actual),
+Evidence codes are `M` (measured or directly reported boundary-specific value),
 `R` (reconstructed), `T` (transferred), `A` (author assumption), `P` (planned
 or permitted), and `U` (unresolved). A numerical result is calculated only when
 the declared numerator and denominator pass the analysis-unit, time, water-
@@ -256,7 +245,7 @@ citation.
 Suggested software citation:
 
 > Akinade, B. A., Amanambu, A. C., Frame, J. M., & Ren, S. (2026). *WCI and
-> PDLR Reproducibility Package* (Version 1.0.0) [Software]. GitHub.
+> PDLR Reproducibility Package* (Version 1.1.0) [Software]. GitHub.
 > https://github.com/BasitAkin/Water-Consumption-Impact_WCI-and-Peak-Delivery-Load-Ratio_PDLR
 
 Please also cite the associated article when its final bibliographic
