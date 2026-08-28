@@ -25,7 +25,7 @@ quantities remain visible in the machine-readable results.
 | Council Bluffs, Iowa | 30 MGD reconstructed combined nominal potable-treatment capacity | Reconstructed from Narrows 20 MGD and Council Point 10 MGD; retained conditionally and not interpreted as firm headroom. |
 | Mayes County, Oklahoma | 50 MGD park-owned potable-system nominal capacity | Distinct from the reported 32 MGD available headroom. |
 | The Dalles, Oregon | 8.7 MGD current reliable peak-season system supply | The 2025 Water Management and Conservation Plan directly reports combined reliable surface- and groundwater supply; the 4.5 MGD 2006 value remains historical context only. |
-| Douglas County, Georgia | 3 MGD reclaimed-water subsystem | Primary comparison is recast to the matched reclaimed-water pathway; the campus-wide FY2024 consumptive ratio is used transparently as a within-campus proxy for reclaimed consumption. |
+| Douglas County, Georgia | 3 MGD reclaimed-water subsystem | Primary comparison is recast to the matched reclaimed-water pathway; the campus-wide FY2024 consumptive ratio is used transparently as a within-campus point proxy. Reported source totals bound reclaimed `r` at 0.8232–0.8402 and WCI at 81.85–83.54% when PF and K are fixed. |
 | Mount Pleasant, Wisconsin | 40 MGD Racine system filtration capacity, conditionally retained | Current confirmation and final parcel/service-boundary matching remain pending. |
 | Botetourt County, Virginia | 24 MGD serving-plant nominal capacity | The 2 MGD project quantity is a reported maximum and is not peaked again. |
 | Memphis, Tennessee | 30 MGD serving-plant anchor; 258 MGD whole-system alternative | The 2 MGD local headroom is not treated as nominal treatment capacity. |
@@ -35,7 +35,10 @@ quantities remain visible in the machine-readable results.
 ## Interpretation limits
 
 The ten comparison rows do not share one evidence class or one denominator type. All ten produce conditional numerical WCI and PDLR anchors under explicitly declared boundaries; heterogeneous evidence classes and denominator conventions remain part of the interpretation.
-No case has a complete verified set of low and high inputs. Consequently:
+No case has a complete verified set of low and high inputs. The Douglas source
+totals permit a narrower deterministic source-allocation bound for reclaimed
+`r`, but it holds PF and K fixed and is not a full uncertainty interval.
+Consequently:
 
 - no empirical confidence interval is reported;
 - no definitive cross-site ranking is claimed;
@@ -48,6 +51,10 @@ The complete parameter-level source names, years, locators, evidence codes,
 and boundary notes are retained in `data/wci_input_provenance.csv`. External
 source documents are cited in the manuscript and Supplementary Information and
 are not redistributed in this repository.
+
+The 103-source review classification is retained separately in
+`data/source_corpus_classification.csv`, and automated checks reproduce the
+pathway and evidence-tier totals in Supplementary Table S4.
 
 ## Community-context eligibility
 

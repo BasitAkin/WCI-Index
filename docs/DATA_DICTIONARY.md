@@ -44,6 +44,15 @@ population, household-use equivalents, residential-use-equivalent shares,
 source URLs, and caveats. These are communication comparisons only. A city or
 county population is not assumed to be the matching utility-service population.
 
+### `data/source_corpus_classification.csv`
+
+Contains one row for each of the 103 sources in Supplementary Table S3. Fields
+record corpus order, unique citation key and label, primary contribution,
+primary pathway, evidence tier, detailed source type, cross-pathway role,
+inclusion basis, and the source URL when available. Automated validation checks
+the 103 unique keys and reproduces every pathway-by-evidence-tier cell in
+Supplementary Table S4.
+
 ## Main result files
 
 ### `results/wci_pdlr_scenario_results.csv`
@@ -51,7 +60,16 @@ county population is not assumed to be the matching utility-service population.
 Contains all admissible and unresolved scenarios. Important fields include the
 average and peak withdrawal/consumption quantities, the consumptive ratio,
 withdrawal and consumption peaking factors, `K`, WCI, PDLR, evidence status,
-boundary status, calculation status, identity residual, and interpretation.
+boundary status, calculation status, identity residual, interpretation, and
+`WCI_per_unit_PF_pct`/`PDLR_per_unit_PF_pct` for average-flow scenarios.
+
+### `results/douglas_reclaimed_allocation_bound.csv`
+
+Reconstructs the deterministic Douglas reclaimed-water allocation bound from
+reported FY2024 total withdrawal, reclaimed withdrawal, potable withdrawal by
+difference, and total consumption. It reports the implied reclaimed `r` and WCI
+endpoints with PF and K held fixed. This is not a confidence interval or a full
+empirical uncertainty envelope.
 
 ### `results/wci_pdlr_comparative_results.csv`
 

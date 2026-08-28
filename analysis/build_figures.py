@@ -615,7 +615,7 @@ def main() -> None:
     write_manifest()
     write_layout_audit()
     validate_inputs_and_outputs()
-    print("PASS: generated Figures 3--4 and Supplementary Figure S1 as vector PDFs and 600-dpi JPGs.")
+    print("PASS: generated Figures 3--4 and Supplementary Figure S1 as vector PDFs.")
 
 
 if __name__ == "__main__":

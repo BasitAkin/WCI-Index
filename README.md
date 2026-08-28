@@ -65,7 +65,9 @@ denominators are not interchangeable.
 
 ## Case-study results represented in this repository
 
-The application audit contains ten US cases. All ten primary comparison anchors now have explicitly conditional numerical WCI and PDLR values under declared boundaries. Council Bluffs uses a reconstructed 30 MGD combined nominal potable-treatment capacity; The Dalles uses 8.7 MGD of current reliable peak-season supply; and Douglas County is evaluated on the matched reclaimed-water pathway using the reported 3.0 MGD subsystem capacity and a within-campus consumptive-ratio proxy. The ten numerical WCI anchors span approximately `0.157%` to `134%` after rounding.
+The application audit contains ten US cases. All ten primary comparison anchors now have explicitly conditional numerical WCI and PDLR values under declared boundaries. Council Bluffs uses a reconstructed 30 MGD combined nominal potable-treatment capacity; The Dalles uses 8.7 MGD of current reliable peak-season supply; and Douglas County is evaluated on the matched reclaimed-water pathway using the reported 3.0 MGD subsystem capacity and a within-campus consumptive-ratio proxy. Reported Douglas source totals additionally bound reclaimed `r` at `0.8232–0.8402`; conditional on fixed `PF=2.5` and `K=3 MGD`, WCI is `81.85–83.54%` around the `82.15%` point value. This is a deterministic allocation bound, not a confidence interval. The ten numerical WCI anchors span approximately `0.157%` to `134%` after rounding.
+
+PF dependence is reported explicitly for the two reconstructed average-flow cases: Council Bluffs has `WCI(%) = 9.2004 × PF` and `PDLR(%) = 12.8443 × PF`, while The Dalles has `WCI(%) = 11.3498 × PF` and `PDLR(%) = 14.4809 × PF`.
 
 The community-context calculation has a separate gate. Six cases have a
 defensible FY2024 average-consumption value; four planned or service-maximum
@@ -90,7 +92,7 @@ figures/   Generated vector figures used in the manuscript and supplement
 ```
 
 The repository intentionally excludes internal working notes, superseded
-implementations, external source documents, and superseded figure exports.
+implementations, external source documents, and duplicate figure formats.
 
 ## Reproduce the numerical analysis
 
@@ -116,8 +118,10 @@ A successful run writes the result tables to `results/` and reports that:
 - the ten-case comparison retains ten conditional numerical WCI/PDLR anchors;
 - 48 one-at-a-time sensitivity checks were completed;
 - 23 synthetic boundary and failure-mode cases passed; and
-- no unsupported empirical low or high bounds were generated;
-- all 15 automated validation checks passed.
+- no complete unsupported empirical low or high envelope was generated;
+- the Douglas source-allocation bound and both PF-dependence equations were reproduced;
+- the 103-source row-level corpus reproduced every Supplementary Table S4 total; and
+- all 19 automated validation checks passed.
 
 ## Reproduce the figures
 
@@ -130,9 +134,9 @@ python analysis/build_figures.py
 
 This creates:
 
-- `figures/Figure_3ab_WCI.pdf` and its 600-dpi JPG export;
-- `figures/Figure_4ab_Decomposition.pdf` and its 600-dpi JPG export; and
-- `figures/Figure_S1_Sensitivity_FailureModes.pdf` and its 600-dpi JPG export.
+- `figures/Figure_3ab_WCI.pdf`;
+- `figures/Figure_4ab_Decomposition.pdf`; and
+- `figures/Figure_S1_Sensitivity_FailureModes.pdf`.
 
 The plotting script checks the ten numerical primary WCI/PDLR anchors, six community-context-eligible cases, direct-peak calculation routes, PDF/JPG validity, and text-layout intersections.
 
@@ -143,9 +147,15 @@ The plotting script checks the ten numerical primary WCI/PDLR anchors, six commu
   water pathway, capacity convention, and boundary decision.
 - `data/community_context_inputs.csv` contains the independently labelled
   jurisdictional comparison inputs used in the contextual figure panels.
+- `data/source_corpus_classification.csv` contains one row for each of the 103
+  review sources, including its citation key, primary pathway, evidence tier,
+  source type, contribution, cross-pathway role, inclusion basis, and source URL
+  when available.
 - `results/wci_pdlr_comparative_results.csv` contains all ten primary comparison records, including conditional numerical WCI/PDLR values and their calculation status.
 - `results/wci_pdlr_scenario_results.csv` contains the comparison anchors and
   documented alternative-boundary scenarios.
+- `results/douglas_reclaimed_allocation_bound.csv` reproduces the deterministic
+  reclaimed-stream allocation bound conditional on fixed PF and K.
 - `results/wci_pdlr_analytic_sensitivity.csv` contains the 48 exact algebraic
   one-at-a-time checks at +/-10%, +/-25%, and +/-50%.
 - `results/wci_synthetic_boundary_tests.csv` contains the 23 constructed
@@ -170,9 +180,11 @@ ratio fields remain blank. Supported numerator quantities are retained rather
 than suppressed when only the denominator gate fails.
 
 No complete source-backed low/high input set was available for any of the ten
-comparison cases. The sensitivity and synthetic outputs are therefore
-diagnostic tests, not empirical confidence intervals, site forecasts, or
-definitive rank-stability estimates.
+comparison cases. Douglas County is the one partial exception: the reported
+source totals provide a deterministic allocation bound for reclaimed `r`, but
+PF and K remain fixed and the result is not a joint uncertainty interval. The
+sensitivity and synthetic outputs are therefore diagnostic tests, not empirical
+confidence intervals, site forecasts, or definitive rank-stability estimates.
 
 ## Sensitivity and failure-mode assessment
 
@@ -205,7 +217,10 @@ The committed analysis passes checks covering:
 - denominator-specific alternative scenarios;
 - the reported rounded WCI span;
 - complete sensitivity-design execution; and
-- successful execution of all synthetic tests.
+- successful execution of all synthetic tests;
+- exact Douglas allocation-bound reconstruction;
+- exact Council Bluffs and The Dalles PF coefficients; and
+- 103 unique source-corpus keys with the Table S4 pathway-by-tier matrix.
 
 The GitHub Actions workflow in `.github/workflows/validate.yml` reruns the
 numerical analysis and figure workflow whenever the repository is updated.

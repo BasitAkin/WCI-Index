@@ -22,6 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = REPO_ROOT / "data"
 OUT_DIR = REPO_ROOT / "results"
 INPUT_CSV = DATA_DIR / "wci_input_provenance.csv"
+SOURCE_CORPUS_CSV = DATA_DIR / "source_corpus_classification.csv"
 
 MGD_TO_ML_D = 3.785411784
 FIXED_SEED = 20260813
@@ -261,6 +262,8 @@ def calculate_scenario(rows: list[dict[str, str]]) -> dict[str, Any]:
         "WCI_pct": None,
         "PDLR": None,
         "PDLR_pct": None,
+        "WCI_per_unit_PF_pct": None,
+        "PDLR_per_unit_PF_pct": None,
         "shared_pf_or_constant_r_assumption": "not applicable",
         "identity_residual": None,
         "interpretation_note": calculation_note(meta["scenario_id"]),
@@ -352,11 +355,74 @@ def calculate_scenario(rows: list[dict[str, str]]) -> dict[str, Any]:
             "WCI_pct": None if wci is None else wci * 100,
             "PDLR": pdlr,
             "PDLR_pct": None if pdlr is None else pdlr * 100,
+            "WCI_per_unit_PF_pct": (
+                None if pf_c is None or k is None or c_avg is None else c_avg / k * 100
+            ),
+            "PDLR_per_unit_PF_pct": (
+                None if pf_w is None or k is None or w_avg is None else w_avg / k * 100
+            ),
             "shared_pf_or_constant_r_assumption": assumption,
             "identity_residual": identity_residual,
         }
     )
     return result
+
+
+def build_douglas_allocation_bound(
+    grouped: dict[str, list[dict[str, str]]],
+) -> list[dict[str, Any]]:
+    """Derive a source-accounting bound for Douglas reclaimed consumption.
+
+    Google reports total withdrawal, reclaimed withdrawal, and total consumption,
+    but not consumption by source. The lower endpoint assigns the maximum possible
+    consumption to potable withdrawal; the upper endpoint assigns none. This is an
+    allocation-identity bound conditional on the retained PF and K, not a confidence
+    interval and not a complete empirical uncertainty envelope.
+    """
+    scenario_id = "douglas_reclaimed_subsystem_wci_pdlr"
+    rows = grouped[scenario_id]
+    by_parameter = {row["parameter"]: row for row in rows}
+    reclaimed_withdrawal = float(by_parameter["W_avg"]["source_reported_value"])
+    ratio_parts = [float(value.strip()) for value in by_parameter["r_avg"]["source_reported_value"].split("/")]
+    if len(ratio_parts) != 2:
+        raise ValueError("Douglas source-reported ratio must contain consumption / withdrawal")
+    total_consumption, total_withdrawal = ratio_parts
+    potable_withdrawal = total_withdrawal - reclaimed_withdrawal
+    reclaimed_consumption_low = max(0.0, total_consumption - potable_withdrawal)
+    reclaimed_consumption_high = min(total_consumption, reclaimed_withdrawal)
+    r_low = reclaimed_consumption_low / reclaimed_withdrawal
+    r_high = reclaimed_consumption_high / reclaimed_withdrawal
+    pf = float(by_parameter["PF_shared"]["central_value"])
+    k = float(by_parameter["K"]["central_value"])
+    w_avg_mgd = float(by_parameter["W_avg"]["central_value"])
+    pdlr_pct = w_avg_mgd * pf / k * 100
+    return [
+        {
+            "site_id": rows[0]["site_id"],
+            "scenario_id": scenario_id,
+            "bound_type": "source_accounting_allocation_bound_conditional_on_fixed_PF_and_K",
+            "source_locator": "Google 2025 Environmental Report, p. 110",
+            "total_withdrawal_Mgal_FY2024": total_withdrawal,
+            "reclaimed_withdrawal_Mgal_FY2024": reclaimed_withdrawal,
+            "potable_withdrawal_Mgal_FY2024": potable_withdrawal,
+            "total_consumption_Mgal_FY2024": total_consumption,
+            "reclaimed_consumption_low_Mgal_FY2024": reclaimed_consumption_low,
+            "reclaimed_consumption_high_Mgal_FY2024": reclaimed_consumption_high,
+            "r_low": r_low,
+            "r_point_proxy": total_consumption / total_withdrawal,
+            "r_high": r_high,
+            "PF_fixed": pf,
+            "K_fixed_MGD": k,
+            "WCI_low_pct": w_avg_mgd * r_low * pf / k * 100,
+            "WCI_point_pct": w_avg_mgd * (total_consumption / total_withdrawal) * pf / k * 100,
+            "WCI_high_pct": w_avg_mgd * r_high * pf / k * 100,
+            "PDLR_pct": pdlr_pct,
+            "interpretation": (
+                "Deterministic source-allocation bound only; assumes reported totals are exact and holds PF=2.5 "
+                "and K=3 MGD fixed. It is not an empirical confidence interval or a full uncertainty range."
+            ),
+        }
+    ]
 
 
 def build_evidence_status(
@@ -718,9 +784,11 @@ def build_rank_admissibility(results: list[dict[str, Any]]) -> list[dict[str, An
 
 def build_validation_tests(
     provenance_rows: list[dict[str, str]],
+    source_corpus_rows: list[dict[str, str]],
     results_by_id: dict[str, dict[str, Any]],
     analytic_rows: list[dict[str, Any]],
     synthetic_rows: list[dict[str, Any]],
+    douglas_bound_rows: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     tests: list[dict[str, Any]] = []
 
@@ -845,6 +913,54 @@ def build_validation_tests(
         and math.isclose(douglas["PDLR_pct"], 99.4307832423, rel_tol=0, abs_tol=1e-8),
         f"WCI={douglas['WCI_pct']}%; PDLR={douglas['PDLR_pct']}%; K={douglas['K_MGD']} MGD",
     )
+    bound = douglas_bound_rows[0]
+    record(
+        "douglas_reclaimed_allocation_bound",
+        "Douglas source accounting reproduces the conditional reclaimed-stream ratio and WCI bounds",
+        math.isclose(bound["r_low"], 0.823219601557133, rel_tol=0, abs_tol=1e-12)
+        and math.isclose(bound["r_high"], 0.840164872910465, rel_tol=0, abs_tol=1e-12)
+        and math.isclose(bound["WCI_low_pct"], 81.8533697632058, rel_tol=0, abs_tol=1e-10)
+        and math.isclose(bound["WCI_high_pct"], 83.5382513661202, rel_tol=0, abs_tol=1e-10),
+        f"r={bound['r_low']:.12g}--{bound['r_high']:.12g}; WCI={bound['WCI_low_pct']:.12g}--{bound['WCI_high_pct']:.12g}%",
+    )
+    record(
+        "pf_dependence_coefficients",
+        "Council Bluffs and The Dalles reproduce the stated linear WCI/PDLR dependence on PF",
+        math.isclose(council["WCI_per_unit_PF_pct"], 9.20036429872, rel_tol=0, abs_tol=1e-9)
+        and math.isclose(council["PDLR_per_unit_PF_pct"], 12.8442622951, rel_tol=0, abs_tol=1e-9)
+        and math.isclose(dalles["WCI_per_unit_PF_pct"], 11.3497895861, rel_tol=0, abs_tol=1e-9)
+        and math.isclose(dalles["PDLR_per_unit_PF_pct"], 14.4808743169, rel_tol=0, abs_tol=1e-9),
+        "Council Bluffs: 9.20036/12.8443 percent per PF; The Dalles: 11.3498/14.4809 percent per PF",
+    )
+    corpus_counts = Counter((row["primary_pathway"], row["evidence_tier"]) for row in source_corpus_rows)
+    expected_corpus_counts = {
+        ("Burden", "Peer-reviewed/scholarly"): 26,
+        ("Burden", "Government/regulatory"): 4,
+        ("Burden", "Corporate/industry/institutional"): 7,
+        ("Constraint", "Peer-reviewed/scholarly"): 3,
+        ("Constraint", "Government/regulatory"): 7,
+        ("Constraint", "Corporate/industry/institutional"): 11,
+        ("Constraint", "Investigative/trade"): 10,
+        ("Adaptive", "Peer-reviewed/scholarly"): 20,
+        ("Adaptive", "Government/regulatory"): 1,
+        ("Adaptive", "Corporate/industry/institutional"): 1,
+        ("Adaptive", "Investigative/trade"): 1,
+        ("Cross-cutting", "Government/regulatory"): 2,
+        ("Cross-cutting", "Corporate/industry/institutional"): 10,
+    }
+    citation_keys = [row["citation_key"] for row in source_corpus_rows]
+    record(
+        "source_corpus_coverage",
+        "The machine-readable source corpus contains 103 uniquely keyed records",
+        len(source_corpus_rows) == 103 and len(set(citation_keys)) == 103 and all(citation_keys),
+        f"rows={len(source_corpus_rows)}; unique_keys={len(set(citation_keys))}",
+    )
+    record(
+        "source_corpus_table_s4_totals",
+        "The machine-readable pathway-by-evidence-tier matrix reproduces Supplementary Table S4",
+        corpus_counts == Counter(expected_corpus_counts),
+        "; ".join(f"{pathway}/{tier}={count}" for (pathway, tier), count in sorted(corpus_counts.items())),
+    )
     wisconsin = results_by_id["wisconsin_40_mgd_2021_context"]
     record(
         "wisconsin_corrected_denominator",
@@ -876,6 +992,7 @@ def build_validation_tests(
 def main() -> int:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     provenance_rows = read_csv(INPUT_CSV)
+    source_corpus_rows = read_csv(SOURCE_CORPUS_CSV)
     grouped = validate_and_group(provenance_rows)
     results = [calculate_scenario(rows) for rows in grouped.values()]
     results_by_id = {row["scenario_id"]: row for row in results}
@@ -883,8 +1000,10 @@ def main() -> int:
     analytic_sensitivity = build_analytic_sensitivity()
     synthetic_rows = build_synthetic_boundary_tests()
     rank_rows = build_rank_admissibility(results)
+    douglas_bound_rows = build_douglas_allocation_bound(grouped)
     validation_rows = build_validation_tests(
-        provenance_rows, results_by_id, analytic_sensitivity, synthetic_rows
+        provenance_rows, source_corpus_rows, results_by_id, analytic_sensitivity, synthetic_rows,
+        douglas_bound_rows,
     )
 
     result_fields = [
@@ -894,6 +1013,7 @@ def main() -> int:
         "W_avg_MGD", "C_avg_MGD", "r_used", "PF_W", "PF_C", "W_peak_MGD",
         "C_peak_MGD", "K_MGD", "W_avg_ML_d", "C_avg_ML_d", "W_peak_ML_d",
         "C_peak_ML_d", "K_ML_d", "WCI", "WCI_pct", "PDLR", "PDLR_pct",
+        "WCI_per_unit_PF_pct", "PDLR_per_unit_PF_pct",
         "shared_pf_or_constant_r_assumption", "identity_residual", "interpretation_note",
     ]
     write_csv(OUT_DIR / "wci_pdlr_scenario_results.csv", result_fields, results)
@@ -932,6 +1052,16 @@ def main() -> int:
     ]
     write_csv(OUT_DIR / "wci_rank_admissibility.csv", rank_fields, rank_rows)
 
+    douglas_bound_fields = [
+        "site_id", "scenario_id", "bound_type", "source_locator",
+        "total_withdrawal_Mgal_FY2024", "reclaimed_withdrawal_Mgal_FY2024",
+        "potable_withdrawal_Mgal_FY2024", "total_consumption_Mgal_FY2024",
+        "reclaimed_consumption_low_Mgal_FY2024", "reclaimed_consumption_high_Mgal_FY2024",
+        "r_low", "r_point_proxy", "r_high", "PF_fixed", "K_fixed_MGD",
+        "WCI_low_pct", "WCI_point_pct", "WCI_high_pct", "PDLR_pct", "interpretation",
+    ]
+    write_csv(OUT_DIR / "douglas_reclaimed_allocation_bound.csv", douglas_bound_fields, douglas_bound_rows)
+
     validation_fields = ["test_id", "test_description", "test_status", "observed"]
     write_csv(OUT_DIR / "wci_validation_tests.csv", validation_fields, validation_rows)
 
@@ -943,6 +1073,7 @@ def main() -> int:
         {"key": "fixed_seed_reserved_for_future_sampling", "value": FIXED_SEED},
         {"key": "mgd_to_ml_per_day", "value": MGD_TO_ML_D},
         {"key": "input_sha256", "value": sha256(INPUT_CSV)},
+        {"key": "source_corpus_sha256", "value": sha256(SOURCE_CORPUS_CSV)},
         {"key": "script_sha256", "value": sha256(Path(__file__).resolve())},
     ]
     write_csv(OUT_DIR / "run_metadata.csv", ["key", "value"], metadata_rows)
@@ -960,7 +1091,10 @@ def main() -> int:
         "PASS: all ten comparison anchors have numerical conditional WCI and PDLR values, "
         "including the reconstructed Council Bluffs, current-reliable The Dalles, and reclaimed-pathway Douglas cases."
     )
-    print("PASS: no empirical low/high bounds were generated.")
+    print(
+        "PASS: no complete empirical low/high input envelope was generated; "
+        "the Douglas source-allocation bound is reported separately and conditionally."
+    )
     return 0
 
 
