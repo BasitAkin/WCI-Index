@@ -1,0 +1,40 @@
+name: Apply WCI-PDLR v1.1.0 update
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-v1.1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Apply source updates
+        run: |
+          git apply .update_v1_1/run.patch
+          git apply .update_v1_1/fig.patch
+          git apply .update_v1_1/docs.patch
+          cat .update_v1_1/prov_part1.csv .update_v1_1/prov_part2.csv .update_v1_1/prov_part3.csv > data/wci_input_provenance.csv
+      - name: Regenerate analysis and figures
+        run: |
+          python -m pip install -r requirements.txt
+          python analysis/run_wci_pdlr_analysis.py
+          python analysis/build_figures.py
+      - name: Commit synchronized package
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -r .update_v1_1
+          git rm .github/workflows/apply-v1.1.yml
+          git add README.md CITATION.cff analysis data docs results figures
+          git commit -m 'Update WCI/PDLR reproducibility package to ten-case analysis'
+          git push origin HEAD:main
