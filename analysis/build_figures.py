@@ -540,7 +540,11 @@ def build_figure_5() -> None:
 def write_manifest() -> None:
     inputs = [ANCHORS_CSV, SCENARIOS_CSV, EVIDENCE_CSV, PROVENANCE_CSV, SENSITIVITY_CSV,
               SYNTHETIC_CSV, COMMUNITY_CSV]
-    outputs = sorted([*FIGURES_DIR.glob("*.pdf"), *FIGURES_DIR.glob("*.jpg")])
+    outputs = sorted(
+        path
+        for path in [*FIGURES_DIR.glob("*.pdf"), *FIGURES_DIR.glob("*.jpg")]
+        if not path.name.startswith("._")
+    )
     rows = ["role,file,sha256"]
     rows.extend(
         f"input,{p.relative_to(ROOT).as_posix()},{sha256(p)}" for p in inputs
@@ -548,9 +552,9 @@ def write_manifest() -> None:
     rows.extend(
         f"output,{p.relative_to(ROOT).as_posix()},{sha256(p)}" for p in outputs
     )
-    (RESULTS_DIR / "figure_manifest.csv").write_text(
-        "\n".join(rows) + "\n", encoding="utf-8"
-    )
+    manifest_path = RESULTS_DIR / "figure_manifest.csv"
+    with manifest_path.open("w", encoding="utf-8", newline="") as handle:
+        handle.write("\n".join(rows) + "\n")
 
 
 def write_layout_audit() -> None:
@@ -558,7 +562,7 @@ def write_layout_audit() -> None:
               "overlap_width_px", "overlap_height_px"]
     path = RESULTS_DIR / "figure_layout_audit.csv"
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(LAYOUT_AUDIT_ROWS)
 
@@ -588,7 +592,9 @@ def validate_inputs_and_outputs() -> None:
     if sum(as_float(row["household_equivalents"]) is not None for row in community) != 6:
         raise ValueError("Expected six numeric household equivalents in the ten-case audit")
 
-    pdf_paths = sorted(FIGURES_DIR.glob("*.pdf"))
+    pdf_paths = sorted(
+        path for path in FIGURES_DIR.glob("*.pdf") if not path.name.startswith("._")
+    )
     if len(pdf_paths) != 3:
         raise ValueError("Expected exactly three publication PDF outputs")
     for path in pdf_paths:

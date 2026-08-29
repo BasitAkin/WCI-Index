@@ -46,7 +46,12 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def write_csv(path: Path, fieldnames: list[str], rows: Iterable[dict[str, Any]]) -> None:
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="ignore")
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=fieldnames,
+            extrasaction="ignore",
+            lineterminator="\n",
+        )
         writer.writeheader()
         for row in rows:
             writer.writerow({key: format_csv_value(row.get(key)) for key in fieldnames})

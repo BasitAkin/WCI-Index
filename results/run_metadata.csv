@@ -1,10 +1,10 @@
 key,value
-generated_at_utc,2026-08-28T22:33:47.937581+00:00
-python_version,"3.9.6 (default, May 22 2026, 11:13:45)  [Clang 21.0.0 (clang-2100.1.1.101)]"
-platform,macOS-26.5-arm64-arm-64bit
+generated_at_utc,2026-08-29T19:37:13.741951+00:00
+python_version,"3.9.21 (main, Dec 11 2024, 16:35:24) [MSC v.1929 64 bit (AMD64)]"
+platform,Windows-10-10.0.26200-SP0
 external_dependencies,none; Python standard library only
 fixed_seed_reserved_for_future_sampling,20260813
 mgd_to_ml_per_day,3.785411784
-input_sha256,a81713483e5e8032ca7750930261978425d1c37d7c76824eb35c5be800911640
-source_corpus_sha256,bbd731f9829ecb78c0cb0ebc1a7a08ac355f8b295f08e1adeec595c543586687
-script_sha256,3a6ddd1aafb396c90173eeae7a42ce458190dd613b0ce0e7e43010f1d640fbe9
+input_sha256,850a995eb9d7d8bbef268de0d7d7767af3c63908e0f9fb1a9400b1c99c22e2ea
+source_corpus_sha256,c5ff28d0202d699b948be3770753258b7a8d311da7bbee00d781d1ce51bd0a0e
+script_sha256,78a6d164b6b8f73b45def25517506ed6d8ef1c044cbfcd0d6090a038ee69359e
