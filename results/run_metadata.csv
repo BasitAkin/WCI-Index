@@ -1,7 +1,7 @@
 key,value
-generated_at_utc,2026-08-29T19:37:13.741951+00:00
-python_version,"3.9.21 (main, Dec 11 2024, 16:35:24) [MSC v.1929 64 bit (AMD64)]"
-platform,Windows-10-10.0.26200-SP0
+generated_at_utc,2026-08-30T01:10:22.079919+00:00
+python_version,"3.12.13 (main, Aug  7 2026, 02:26:41) [MSC v.1944 64 bit (AMD64)]"
+platform,Windows-11-10.0.26200-SP0
 external_dependencies,none; Python standard library only
 fixed_seed_reserved_for_future_sampling,20260813
 mgd_to_ml_per_day,3.785411784
